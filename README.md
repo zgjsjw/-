@@ -25,13 +25,16 @@ def clean_data(datafile):
 
 def show_pic(datafile):
     customer_per_country = datafile['Country'].value_counts()
-    print(customer_per_country)
-    sns.barplot(data=customer_per_country)
+    customer_per_country_df = \
+        customer_per_country[customer_per_country.index != 'United Kingdom'].to_frame().T
+    #print(customer_per_country)
+    #print(customer_per_country_df)
+    #customer_per_country
+    sns.barplot(customer_per_country_df)
     plt.xticks(rotation=90)
     plt.xlabel('Country')
     plt.ylabel('#Customers')
     plt.tight_layout()
-    plt.savefig('./output/customer_per_country.png')
     plt.show()
 
 def main():
