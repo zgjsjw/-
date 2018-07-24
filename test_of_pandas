@@ -13,33 +13,41 @@ def show_datainfo(data_file):
 
 def clean_data(datafile):
     adatafile = datafile.dropna()
-    print(datafile.shape)
-    print(adatafile.shape)
+    #print(datafile.shape)
+    #print(adatafile.shape)
     bdatadile = adatafile.drop_duplicates()
-    print(bdatadile.shape)
+    #print(bdatadile.shape)
     bdatadile.to_csv(data_out,index=False,encoding='utf-8')
     return bdatadile
 
 def show_pic(datafile):
     customer_per_country = datafile['Country'].value_counts()
-    customer_per_country_df = \
-        customer_per_country[customer_per_country.index != 'United Kingdom'].to_frame().T
-    #print(customer_per_country)
+
+    print(customer_per_country)
     #print(customer_per_country_df)
     #customer_per_country
-    sns.barplot(customer_per_country_df)
-    plt.xticks(rotation=90)
+    #sns.barplot(customer_per_country_df)
+    customer_per_country_count = customer_per_country[customer_per_country.index != 'United Kingdom']
+    print(customer_per_country_count)
+    customer_per_country_count.plot(kind='bar')
+    #plt.xticks(rotation = 90)
     plt.xlabel('Country')
-    plt.ylabel('#Customers')
+    plt.ylabel('Customer_count')
     plt.tight_layout()
     plt.show()
+
+def show_pic2(datadile):
+    data1 = datadile[datadile.index != 'United Kingdom']
+    data2 = datadile['InvoiceNo'].str.startswith('C')
+    print(data2)
 
 def main():
     read_data = pd.read_excel(data_in)
     #show_datainfo(read_data)
     tem_data = clean_data(read_data)
-    show_pic(tem_data)
-    print(os.getcwd())
+    #show_pic(tem_data)
+    show_pic2(tem_data)
+    #print(os.getcwd())
     #print('{}'.format('1'))
 
 if __name__ == '__main__':
