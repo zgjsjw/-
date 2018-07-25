@@ -37,14 +37,27 @@ def show_pic(datafile):
     plt.show()
 
 def show_pic2(datadile):
-    data1 = datadile[datadile.index != 'United Kingdom']
-    data2 = datadile['InvoiceNo'].str.startswith('C')
-    print(data2)
+    data1 = datadile['Country'] != 'United Kingdom'
+    data2 = ~datadile['InvoiceNo'].str.startswith('C')
+    valid_data = datadile[data1 & data2].copy()
+    valid_data['total_cost'] = valid_data['Quantity'] * valid_data['UnitPrice']
+    cost_per_country = valid_data.groupby('Country')['total_cost'].sum()
+    print(cost_per_country)
+    cost_per_country.sort_values(ascending=False).plot(kind='bar')
+    plt.tight_layout()
+    plt.show()
 
 def main():
-    read_data = pd.read_excel(data_in)
-    #show_datainfo(read_data)
-    tem_data = clean_data(read_data)
+    if not os.path.exists(data_out):
+
+        read_data = pd.read_excel(data_in)
+        #show_datainfo(read_data)
+        tem_data = clean_data(read_data)
+        print('清洗加工数据')
+    else:
+        tem_data = pd.read_csv(data_out)
+        print('读取加工数据')
+
     #show_pic(tem_data)
     show_pic2(tem_data)
     #print(os.getcwd())
