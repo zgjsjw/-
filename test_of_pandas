@@ -47,6 +47,27 @@ def show_pic2(datadile):
     plt.tight_layout()
     plt.show()
 
+def show_pic3(datafile):
+    country = ['Germany', 'France', 'Spain', 'Belgium', 'Switzerland']
+    valid_data = datafile[datafile['Country'].isin(country)].copy()
+    #print(valid_data.info())
+    #print(valid_data.head())
+    valid_data['InvoiceDate'] = pd.to_datetime(valid_data['InvoiceDate'])
+    valid_data['year'] = valid_data['InvoiceDate'].dt.year.astype(str)
+    valid_data['month'] = valid_data['InvoiceDate'].dt.month.astype(str)
+    valid_data['year-month'] = valid_data['year'].str.cat(valid_data['month'],sep = '-')
+    #print(valid_data.head())
+    month_country_count = valid_data.groupby(['year-month', 'Country'])['StockCode'].count()
+    #print(month_country_count)
+
+    month_country_count_pf = month_country_count.unstack()
+    month_country_count_pf.index = pd.to_datetime(month_country_count_pf.index).to_period('M')
+    month_country_count_pf.sort_index(inplace = True)
+    print(month_country_count_pf)
+    month_country_count_pf.plot(kind='bar',stacked=True)
+    plt.tight_layout()
+    plt.show()
+
 def main():
     if not os.path.exists(data_out):
 
@@ -59,7 +80,8 @@ def main():
         print('读取加工数据')
 
     #show_pic(tem_data)
-    show_pic2(tem_data)
+    #show_pic2(tem_data)
+    show_pic3(tem_data)
     #print(os.getcwd())
     #print('{}'.format('1'))
 
